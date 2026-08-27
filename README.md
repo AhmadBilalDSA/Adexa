@@ -55,6 +55,20 @@ The main components are:
 
 ---
 
+## Demo
+
+ADEXA analyzes a failed payload, selects a repair strategy, generates a new candidate, and verifies whether the repaired payload successfully executes.
+
+<p align="center">
+  <img src="docs/images/adexa-demo.png"
+       alt="ADEXA payload repair and verification demo"
+       width="850">
+</p>
+
+<p align="center">
+  <em>Example of ADEXA repairing and verifying a payload in a controlled DVWA environment.</em>
+</p>
+
 ## How ADEXA Works
 
 ```text
