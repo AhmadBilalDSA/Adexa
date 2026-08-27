@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets / environment
+.env
+.env.*
+*.pem
+*.key
+secrets/
+credentials/
+
+# Runtime output
+runs/
+logs/
+tmp/
+cache/
+
+# Model files
+*.gguf
+*.bin
+*.pt
+*.pth
+*.safetensors
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Backups
+*.bak
+*.backup
+*.tar.gz
+*.zip
+
+# Local temporary files
+*.log
+
+# Patch / editor leftovers
+*.orig
+*.rej
+*.bak*
+*_before_ai.py
+
+# ADEXA generated exploit outputs
+*_ADEXA_FIXED*.py
+
+# Compiled test binaries
+exploit_tests/vuln1

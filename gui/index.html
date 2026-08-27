@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ADEXA – AI Exploit & Web Scanner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="adexa-shell">
+
+    <!-- TOP BAR -->
+    <header class="top-bar">
+        <div class="brand">
+            <div class="logo-placeholder"><span>A</span></div>
+            <div class="brand-text">
+                <h1>ADEXA</h1>
+                <p>AI-Driven Exploit & Web Analysis Console</p>
+            </div>
+        </div>
+
+        <nav class="top-nav">
+            <span class="nav-pill nav-pill-active">Dashboard</span>
+            <span class="nav-pill">Crash Engine</span>
+            <span class="nav-pill">Web AI</span>
+            <span class="nav-pill">Reports</span>
+        </nav>
+    </header>
+
+    <!-- MAIN GRID -->
+    <main class="main-grid">
+
+        <!-- CRASH ANALYSIS PANEL -->
+        <section class="panel panel-crash">
+            <div class="panel-header">
+                <div>
+                    <h2>Crash Analysis</h2>
+                    <p>Feed ADEXA a vulnerable binary and let the AI reason about the crash.</p>
+                </div>
+                <span class="tag tag-purple">Binary Exploitation</span>
+            </div>
+
+            <form method="POST" action="/analyze_crash" class="panel-form">
+                <label class="field-label">Target Binary</label>
+                <input type="text"
+                       name="binary_path"
+                       class="input neon-input"
+                       placeholder="exploit_tests/vuln1"
+                       value="{{ last_binary or '' }}"
+                       autocomplete="off">
+
+                <div class="button-row">
+                    <button type="submit" class="btn btn-primary">▷ Run Crash Analysis</button>
+                    <span class="hint">ADEXA runs GDB → parses crash → AI reasoning</span>
+                </div>
+            </form>
+
+            <div class="output-zone">
+                <div class="output-column">
+                    <h3>GDB / Engine Output</h3>
+                    <pre class="terminal">{{ crash_output or "No crash yet." }}</pre>
+                </div>
+
+                <div class="output-column">
+                    <h3>ADEXA AI Insight</h3>
+                    <pre class="terminal terminal-ai">
+{{ crash_ai_output or "Run a crash and ADEXA will explain registers, offset, overflow type, and exploit paths." }}
+                    </pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- WEB ANALYZER PANEL -->
+        <section class="panel panel-web">
+            <div class="panel-header">
+                <div>
+                    <h2>Web Request Analyzer</h2>
+                    <p>ADEXA hunts SQLi, XSS, CMDi, SSTI & more.</p>
+                </div>
+                <span class="tag tag-cyan">Web Pentest</span>
+            </div>
+
+            <form method="POST" action="/analyze_web" class="panel-form">
+                <label class="field-label">HTTP Request / curl</label>
+                <textarea name="raw_request"
+                          class="textarea neon-input"
+                          rows="8"
+                          placeholder="POST /login HTTP/1.1&#10;Host: example.com&#10;&#10;username=admin' OR '1'='1"
+                >{{ last_request or '' }}</textarea>
+
+                <div class="button-row">
+                    <button type="submit" class="btn btn-primary">⚡ Analyze Web Request</button>
+                    <span class="hint">Parses → detects → generates PoCs → AI reasoning</span>
+                </div>
+            </form>
+
+            <div class="output-zone">
+                <div class="output-column">
+                    <h3>Findings & PoCs</h3>
+                    <pre class="terminal">{{ web_output or "Output will appear here." }}</pre>
+                </div>
+
+                <div class="output-column">
+                    <h3>Web AI Reasoning</h3>
+                    <pre class="terminal terminal-ai">
+{{ web_ai_output or "The Web AI will summarise impact, suggest payloads, bypasses and remediation steps." }}
+                    </pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <span>ADEXA v0.1 – AI Exploit Auto-Fixer & Web Assistant</span>
+        <span class="footer-right">Neon mode · Kali session</span>
+    </footer>
+
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ADEXA – AI Exploit & Web Scanner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="adexa-shell">
+
+    <!-- TOP BAR -->
+    <header class="top-bar">
+        <div class="brand">
+            <div class="logo-placeholder"><span>A</span></div>
+            <div class="brand-text">
+                <h1>ADEXA</h1>
+                <p>AI-Driven Exploit & Web Analysis Console</p>
+            </div>
+        </div>
+
+        <nav class="top-nav">
+            <span class="nav-pill nav-pill-active">Dashboard</span>
+            <span class="nav-pill">Crash Engine</span>
+            <span class="nav-pill">Web AI</span>
+            <span class="nav-pill">Reports</span>
+        </nav>
+    </header>
+
+    <!-- MAIN GRID -->
+    <main class="main-grid">
+
+        <!-- CRASH ANALYSIS PANEL -->
+        <section class="panel panel-crash">
+            <div class="panel-header">
+                <div>
+                    <h2>Crash Analysis</h2>
+                    <p>Feed ADEXA a vulnerable binary and let the AI reason about the crash.</p>
+                </div>
+                <span class="tag tag-purple">Binary Exploitation</span>
+            </div>
+
+            <form method="POST" action="/analyze_crash" class="panel-form">
+                <label class="field-label">Target Binary</label>
+                <input type="text"
+                       name="binary_path"
+                       class="input neon-input"
+                       placeholder="exploit_tests/vuln1"
+                       value="{{ last_binary or '' }}"
+                       autocomplete="off">
+
+                <div class="button-row">
+                    <button type="submit" class="btn btn-primary">▷ Run Crash Analysis</button>
+                    <span class="hint">ADEXA runs GDB → parses crash → AI reasoning</span>
+                </div>
+            </form>
+
+            <div class="output-zone">
+                <div class="output-column">
+                    <h3>GDB / Engine Output</h3>
+                    <pre class="terminal">{{ crash_output or "No crash yet." }}</pre>
+                </div>
+
+                <div class="output-column">
+                    <h3>ADEXA AI Insight</h3>
+                    <pre class="terminal terminal-ai">
+{{ crash_ai_output or "Run a crash and ADEXA will explain registers, offset, overflow type, and exploit paths." }}
+                    </pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- WEB ANALYZER PANEL -->
+        <section class="panel panel-web">
+            <div class="panel-header">
+                <div>
+                    <h2>Web Request Analyzer</h2>
+                    <p>ADEXA hunts SQLi, XSS, CMDi, SSTI & more.</p>
+                </div>
+                <span class="tag tag-cyan">Web Pentest</span>
+            </div>
+
+            <form method="POST" action="/analyze_web" class="panel-form">
+                <label class="field-label">HTTP Request / curl</label>
+                <textarea name="raw_request"
+                          class="textarea neon-input"
+                          rows="8"
+                          placeholder="POST /login HTTP/1.1&#10;Host: example.com&#10;&#10;username=admin' OR '1'='1"
+                >{{ last_request or '' }}</textarea>
+
+                <div class="button-row">
+                    <button type="submit" class="btn btn-primary">⚡ Analyze Web Request</button>
+                    <span class="hint">Parses → detects → generates PoCs → AI reasoning</span>
+                </div>
+            </form>
+
+            <div class="output-zone">
+                <div class="output-column">
+                    <h3>Findings & PoCs</h3>
+                    <pre class="terminal">{{ web_output or "Output will appear here." }}</pre>
+                </div>
+
+                <div class="output-column">
+                    <h3>Web AI Reasoning</h3>
+                    <pre class="terminal terminal-ai">
+{{ web_ai_output or "The Web AI will summarise impact, suggest payloads, bypasses and remediation steps." }}
+                    </pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <span>ADEXA v0.1 – AI Exploit Auto-Fixer & Web Assistant</span>
+        <span class="footer-right">Neon mode · Kali session</span>
+    </footer>
+
+</div>
+</body>
+</html>
+

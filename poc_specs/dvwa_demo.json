@@ -1,0 +1,45 @@
+{
+  "name": "DVWA SQLi Demo (force security=low + reliable auth)",
+  "base_url": "http://192.168.64.7/dvwa",
+  "timeout": 20,
+  "steps": [
+    {
+      "id": "get_login",
+      "name": "GET login page (prime session)",
+      "method": "GET",
+      "path": "/login.php",
+      "headers": {}
+    },
+    {
+      "id": "set_security_low",
+      "name": "Set DVWA security cookie to low",
+      "method": "GET",
+      "path": "/security.php?security=low&seclev_submit=Submit",
+      "headers": {}
+    },
+    {
+      "id": "login",
+      "name": "POST login (admin/password)",
+      "method": "POST",
+      "path": "/login.php",
+      "headers": {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      "body": "username=admin&password=password&Login=Login"
+    },
+    {
+      "id": "sqli",
+      "name": "Open SQLi page (authenticated)",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/",
+      "headers": {}
+    }
+  ],
+  "success": {
+    "any_step_contains": [
+      "Vulnerability: SQL Injection",
+      "Security Level is currently low",
+      "Logout"
+    ]
+  }
+}

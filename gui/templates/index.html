@@ -1,0 +1,68 @@
+from flask import Flask, render_template_string, request
+import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from debugger.gdb_runner import run_gdb
+from web_engine.pipeline import analyze_web_request
+
+app = Flask(__name__)
+
+# --- Simple HTML UI Template ---
+HTML = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ADEXA Interface</title>
+    <style>
+        body { background: #0d1117; color: #fff; font-family: Arial; padding: 20px; }
+        textarea, input { width: 100%; padding: 10px; border-radius: 6px; margin-top: 10px; }
+        button { padding: 12px; margin-top: 15px; width: 100%; background: #238636;
+                 color: #fff; border: none; border-radius: 6px; }
+        h2 { color: #58a6ff; }
+        pre { background: #161b22; padding: 10px; border-radius: 6px; }
+    </style>
+</head>
+<body>
+    <h1>ADEXA Web Interface</h1>
+
+    <h2>Crash Analysis</h2>
+    <form method="post" action="/crash">
+        <input type="text" name="binary" placeholder="Binary path (e.g., exploit_tests/vuln1)">
+        <button type="submit">Run Crash Analysis</button>
+    </form>
+
+    <h2>Web Request Analyzer</h2>
+    <form method="post" action="/web">
+        <textarea name="raw_request" rows="8" placeholder="Paste HTTP request or curl command"></textarea>
+        <button type="submit">Analyze Web Request</button>
+    </form>
+
+    {% if result %}
+        <h2>Result</h2>
+        <pre>{{ result }}</pre>
+    {% endif %}
+</body>
+</html>
+"""
+
+@app.route("/", methods=["GET"])
+def index():
+    return render_template_string(HTML)
+
+@app.route("/crash", methods=["POST"])
+def crash():
+    binary = request.form.get("binary")
+    output = run_gdb(binary)  # triggers crash engine
+    return render_template_string(HTML, result=output)
+
+@app.route("/web", methods=["POST"])
+def web():
+    raw = request.form.get("raw_request")
+    result = analyze_web_request(raw)
+    return render_template_string(HTML, result=result)
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=5000, debug=True)
+                                                                                                

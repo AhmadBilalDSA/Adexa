@@ -1,0 +1,96 @@
+{
+  "name": "DVWA SQLi Test - Force Boolean No Difference then Switch Time",
+  "base_url": "http://192.168.64.7/dvwa",
+  "timeout": 20,
+  "success": {
+    "require_security_level": "low",
+    "boolean_diff": {
+      "baseline_step": "sqli_baseline",
+      "true_step": "sqli_true",
+      "false_step": "sqli_false"
+    },
+    "time_diff": {
+      "baseline_step": "sqli_baseline",
+      "probe_step": "sqli_false",
+      "min_delta_s": 3.0
+    }
+  },
+  "steps": [
+    {
+      "id": "get_login",
+      "name": "GET login page (fetch user_token if present)",
+      "method": "GET",
+      "path": "/login.php",
+      "headers": {}
+    },
+    {
+      "id": "login",
+      "name": "POST login (admin/password + user_token if required)",
+      "method": "POST",
+      "path": "/login.php",
+      "headers": {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      "body": "username=admin&password=password&Login=Login&user_token={{user_token}}"
+    },
+    {
+      "id": "home_check",
+      "name": "GET home (check Logout exists)",
+      "method": "GET",
+      "path": "/",
+      "headers": {}
+    },
+    {
+      "id": "get_security",
+      "name": "GET security page (fetch user_token if required)",
+      "method": "GET",
+      "path": "/security.php",
+      "headers": {}
+    },
+    {
+      "id": "set_security_low",
+      "name": "POST set security level low",
+      "method": "POST",
+      "path": "/security.php",
+      "headers": {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      "body": "security=low&seclev_submit=Submit&user_token={{user_token}}"
+    },
+    {
+      "id": "security_check",
+      "name": "GET security page again (confirm low)",
+      "method": "GET",
+      "path": "/security.php",
+      "headers": {}
+    },
+    {
+      "id": "sqli_page",
+      "name": "GET SQLi page",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/",
+      "headers": {}
+    },
+    {
+      "id": "sqli_baseline",
+      "name": "Baseline (id=1)",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/?id=1&Submit=Submit",
+      "headers": {}
+    },
+    {
+      "id": "sqli_true",
+      "name": "FORCE NO DIFFERENCE: True step uses same request as baseline",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/?id=1&Submit=Submit",
+      "headers": {}
+    },
+    {
+      "id": "sqli_false",
+      "name": "FORCE NO DIFFERENCE: False step uses same request as baseline (planner should mutate to time-based)",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/?id=1&Submit=Submit",
+      "headers": {}
+    }
+  ]
+}

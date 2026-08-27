@@ -1,0 +1,91 @@
+{
+  "name": "DVWA SQLi (FORCE session_lost test - wrong login)",
+  "base_url": "http://192.168.64.7/dvwa",
+  "timeout": 20,
+  "steps": [
+    {
+      "id": "get_login",
+      "name": "GET login page (fetch user_token if present)",
+      "method": "GET",
+      "path": "/login.php",
+      "headers": {}
+    },
+    {
+      "id": "login",
+      "name": "POST login (WRONG password to force not_authenticated)",
+      "method": "POST",
+      "path": "/login.php",
+      "headers": {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      "body": "username=admin&password=WRONGPASS&Login=Login&user_token={{user_token}}"
+    },
+    {
+      "id": "home_check",
+      "name": "Verify authenticated session (must contain Logout) - should fail",
+      "method": "GET",
+      "path": "/",
+      "headers": {}
+    },
+    {
+      "id": "get_security",
+      "name": "GET security page (should not be reachable if session lost)",
+      "method": "GET",
+      "path": "/security.php",
+      "headers": {}
+    },
+    {
+      "id": "set_security_low",
+      "name": "POST security=low (should not be reachable if session lost)",
+      "method": "POST",
+      "path": "/security.php",
+      "headers": {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      "body": "security=low&seclev_submit=Submit&user_token={{user_token}}"
+    },
+    {
+      "id": "security_check",
+      "name": "Confirm security is low (should not be reachable if session lost)",
+      "method": "GET",
+      "path": "/security.php",
+      "headers": {}
+    },
+    {
+      "id": "sqli_page",
+      "name": "Open SQLi page (should not be reachable if session lost)",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/",
+      "headers": {}
+    },
+    {
+      "id": "sqli_baseline",
+      "name": "SQLi baseline request (should not be reachable if session lost)",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/?id=1&Submit=Submit",
+      "headers": {}
+    },
+    {
+      "id": "sqli_true",
+      "name": "Boolean TRUE (should not be reachable if session lost)",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/?id=1%20AND%201%3D1&Submit=Submit",
+      "headers": {}
+    },
+    {
+      "id": "sqli_false",
+      "name": "Boolean FALSE (should not be reachable if session lost)",
+      "method": "GET",
+      "path": "/vulnerabilities/sqli/?id=1%20AND%201%3D2&Submit=Submit",
+      "headers": {}
+    }
+  ],
+  "success": {
+    "require_security_level": "low",
+    "boolean_diff": {
+      "baseline_step": "sqli_baseline",
+      "true_step": "sqli_true",
+      "false_step": "sqli_false"
+    }
+  }
+}

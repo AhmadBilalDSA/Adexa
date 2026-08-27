@@ -1,0 +1,8 @@
+set pagination off
+handle SIGSEGV stop print
+handle SIGBUS stop print
+run
+info registers
+bt
+x/20x $sp
+quit
