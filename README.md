@@ -62,7 +62,7 @@ ADEXA analyzes a failed payload, selects a repair strategy, generates a new cand
 <p align="center">
   <img src="docs/images/adexa-demo.png"
        alt="ADEXA payload repair and verification demo"
-       width="850">
+       width="1500">
 </p>
 
 <p align="center">
