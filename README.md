@@ -1,5 +1,12 @@
 # ADEXA
 
+> [!WARNING]
+> **AUTHORIZED SECURITY TESTING ONLY**
+>
+> ADEXA is intended exclusively for cybersecurity research, education, controlled laboratory environments, and security testing performed with explicit authorization.
+>
+> **Do not use ADEXA against systems, applications, networks, or infrastructure without explicit permission from the owner.**
+
 ### Adaptive Exploit Repair and Verification Framework
 
 **ADEXA** is an AI-assisted cybersecurity research framework that analyzes failed security-testing payloads, generates repaired candidates, and verifies whether the repaired payload succeeds against an authorized test environment.
@@ -327,6 +334,8 @@ The current Python dependencies include:
 
 ## Usage
 
+> **⚠️ Authorization Required:** The commands and examples below are intended only for systems you own or have explicit authorization to test.
+
 > **Only use ADEXA against systems you own or have explicit authorization to test.**
 
 ### Web / SQL Injection Mode
@@ -560,6 +569,23 @@ ADEXA is intended exclusively for:
 Users are responsible for ensuring that their activities comply with applicable laws, policies, and authorization requirements.
 
 ---
+
+## Responsible Use
+
+ADEXA is designed exclusively for **authorized security testing**.
+
+Permitted use includes:
+
+- Systems you own
+- Systems you have explicit permission to test
+- Controlled cybersecurity laboratories
+- DVWA and similar intentionally vulnerable applications
+- CTF and educational environments
+- Authorized penetration testing and security research
+
+ADEXA must not be used to test, exploit, or interfere with systems without authorization.
+
+Users are responsible for ensuring that their use of ADEXA complies with applicable laws, organizational policies, and the scope of their testing authorization.
 
 ## License
 
