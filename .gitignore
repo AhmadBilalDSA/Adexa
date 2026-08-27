@@ -55,3 +55,14 @@ cache/
 
 # Compiled test binaries
 exploit_tests/vuln1
+
+
+
+# Generated ADEXA dataset artifacts
+dataset/data/adexa_dataset*.json
+dataset/data/final_training_dataset.json
+dataset/data/pipeline_fixed.json
+
+# Dataset backups and cache
+dataset/*.backup
+dataset/__pycache__/

