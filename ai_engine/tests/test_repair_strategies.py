@@ -51,7 +51,7 @@ class TestSQLInjectionRepairStrategies:
 
     def test_scoring_time_based(self):
         """Test scoring logic for time-based injections."""
-        candidate = "1' AND SLEEP(5)"
+        candidate = "1' AND SLEEP(5) -- -"
         current = "1' AND SLP(5)"
         likely_intent = "time_based"
         likely_damage = ["misspelled_function"]
