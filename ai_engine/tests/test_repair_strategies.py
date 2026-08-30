@@ -1,4 +1,11 @@
+import os
+
 import pytest
+
+# Force ADEXA onto its deterministic no-LLM safe-fallback path so the runtime
+# analysis never depends on Ollama being reachable during the test session.
+os.environ["ADEXA_NO_AI"] = "1"
+
 from ai_engine.poc_ai import (
     _is_structurally_valid_candidate,
     _score_candidate_local,
@@ -8,7 +15,8 @@ from ai_engine.poc_ai import (
     _build_candidate_list,
     _call_ollama_repair,
     _call_ollama_diagnose,
-    analyze_poc
+    analyze_poc,
+    ALLOWED_STRATEGIES,
 )
 from ai_engine.repair_memory import load_repair_memory, _detect_intent, _normalize_payload
 
@@ -175,84 +183,129 @@ class TestSQLInjectionRepairStrategies:
         assert _normalize_payload("1'AND'SLEEP(5)") == "1'and'sleep(5)"
 
     def test_injection_patterns_comprehensive(self):
-        """Test comprehensive SQL injection patterns and their repairs."""
+        """Test comprehensive SQL injection patterns through ADEXA's runtime path."""
         test_cases = [
             # Basic boolean injections
             {
                 "broken": "1' OR '1'='2",
                 "strategy": "SWITCH_BOOLEAN",
-                "expected_repaired_contains": ["1' OR '1'='1", "1' AND 1=1"],
+                "expected_intent": "boolean_based",
                 "description": "Basic boolean OR injection"
             },
             {
                 "broken": "1' AND '1'='2",
                 "strategy": "SWITCH_BOOLEAN",
-                "expected_repaired_contains": ["1' AND '1'='1", "1' OR 1=1"],
+                "expected_intent": "boolean_based",
                 "description": "Basic boolean AND injection"
             },
             # Time-based injections
             {
                 "broken": "1' AND SLEEP(3)",
                 "strategy": "SWITCH_TIME",
-                "expected_repaired_contains": ["SLEEP(5)", "SLEEP(3)"],  # May keep or increase sleep time
+                "expected_intent": "time_based",
                 "description": "Basic time-based injection"
             },
             {
                 "broken": "1' AND SLP(5)",
                 "strategy": "SWITCH_TIME",
-                "expected_repaired_contains": ["SLEEP"],  # Should correct misspelling
+                "expected_intent": "unknown",
                 "description": "Misspelled SLEEP function"
             },
             # IF-based time injections
             {
                 "broken": "1' AND IF(1=0,SLEEP(5),0)",
                 "strategy": "SWITCH_TIME",
-                "expected_repaired_contains": ["IF", "SLEEP"],
+                "expected_intent": "time_based",
                 "description": "IF-based time injection"
             },
             # Quote variations
             {
                 "broken": '" OR "1"="2',
                 "strategy": "SWITCH_BOOLEAN",
-                "expected_repaired_contains": ['" OR "1"="1', '" AND 1=1'],
+                "expected_intent": "boolean_based",
                 "description": "Double-quoted boolean injection"
             }
         ]
-        
+
         for case in test_cases:
-            # Test that we can at least process these patterns
-            # (Actual repair would require LLM/mocks, so we test structure)
-            assert "broken" in case
-            assert "strategy" in case
-            assert case["strategy"] in ["SWITCH_BOOLEAN", "SWITCH_TIME", "CHANGE_QUOTES"]
+            detection = _detect_intent(case["broken"])
+            normalized = _normalize_payload(case["broken"])
+            assert detection == case["expected_intent"]
+            assert isinstance(normalized, str) and normalized
+
+            observation = {
+                "payload": {
+                    "current_payload_raw": case["broken"],
+                    "current_payload_normalized": normalized,
+                },
+                "payload_features": {
+                    "likely_intent": detection,
+                    "likely_damage_types": ["unknown"],
+                },
+                "constraints": {"allowed_strategies": list(ALLOWED_STRATEGIES)},
+            }
+            result = analyze_poc(observation)
+            analysis = result["analysis"]
+
+            assert analysis["next_strategy"] == case["strategy"]
+            assert analysis["next_strategy"] in ALLOWED_STRATEGIES
+            assert analysis["diagnosis"]["likely_intent"] == detection
+
+            assert 0.0 <= analysis["confidence"] <= 1.0
+            assert isinstance(analysis["candidate_scores"], list)
+            assert len(analysis["candidate_scores"]) > 0
+            for scored in analysis["candidate_scores"]:
+                assert isinstance(scored["payload"], str) and scored["payload"].strip()
+                assert isinstance(scored["score"], (int, float))
+                assert isinstance(scored["reason"], str) and scored["reason"]
+
+            assert analysis["next_payload"] == analysis["candidate_scores"][0]["payload"]
+            assert _is_structurally_valid_candidate(analysis["next_payload"])
 
     def test_edge_cases_and_malformed_inputs(self):
         """Test edge cases and malformed SQL injection attempts."""
         edge_cases = [
-            "",  # Empty string
-            " ",  # Whitespace only
-            "1'",  # Unfinished quote
-            "1' OR",  # Unfinished OR
-            "1 AND SLEEP(",  # Unfinished function
-            "1' OR '1'='1'",  # Extra quote
-            "1/*comment*/OR'1'='1",  # With comment
-            "1' OR '1'='1'; DROP TABLE users--",  # Multiple statements
+            ("", False, "", "unknown"),  # Empty string
+            (" ", False, "", "unknown"),  # Whitespace only
+            ("1'", False, "1'", "unknown"),  # Unfinished quote
+            ("1' OR", False, "1' or", "unknown"),  # Unfinished OR
+            ("1 AND SLEEP(", False, "1 and sleep(", "time_based"),  # Unfinished function
+            ("1' OR '1'='1'", False, "1' or '1'='1'", "boolean_based"),  # Extra quote
+            ("1/*comment*/OR'1'='1", False, "1/*comment*/or'1'='1", "boolean_based"),  # With comment
+            (
+                "1' OR '1'='1'; DROP TABLE users--",
+                True,
+                "1' or '1'='1'; drop table users--",
+                "boolean_based",
+            ),  # Multiple statements
         ]
-        
-        for case in edge_cases:
-            # Structural validation should handle these appropriately
-            is_valid = _is_structurally_valid_candidate(case)
-            # Most should be invalid due to structural issues
-            # We mainly test that our functions don't crash
-            try:
-                normalized = _normalize_payload(case)
-                intent = _detect_intent(case)
-                # These should not raise exceptions
-                assert isinstance(normalized, str)
-                assert isinstance(intent, str)
-            except Exception:
-                # Some edge cases might cause issues, that's ok for this test
-                pass
+
+        for payload, expected_valid, expected_normalized, expected_intent in edge_cases:
+            assert _is_structurally_valid_candidate(payload) == expected_valid
+            assert _normalize_payload(payload) == expected_normalized
+            assert _detect_intent(payload) == expected_intent
+
+            observation = {
+                "payload": {"current_payload_raw": payload},
+                "payload_features": {
+                    "likely_intent": _detect_intent(payload),
+                    "likely_damage_types": ["unknown"],
+                },
+                "constraints": {"allowed_strategies": list(ALLOWED_STRATEGIES)},
+            }
+            result = analyze_poc(observation)
+            analysis = result["analysis"]
+
+            assert analysis["next_strategy"] in ALLOWED_STRATEGIES
+            assert 0.0 <= analysis["confidence"] <= 1.0
+            assert isinstance(analysis["next_payload"], str) and analysis["next_payload"].strip()
+            assert _is_structurally_valid_candidate(analysis["next_payload"])
+            assert isinstance(analysis["candidate_scores"], list)
+            assert len(analysis["candidate_scores"]) > 0
+            for scored in analysis["candidate_scores"]:
+                assert isinstance(scored["payload"], str) and scored["payload"].strip()
+                assert isinstance(scored["score"], (int, float))
+                assert isinstance(scored["reason"], str) and scored["reason"]
 
     def test_repair_strategy_constraints(self):
         """Test that repair strategies respect constraints."""
